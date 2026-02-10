@@ -1,199 +1,88 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>¿Quieres ser mi San Valentín?</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego de Prueba</title>
 
-  <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
-
+<style>
     body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        text-align: center;
     }
 
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      width: 90%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      position: relative;
-      z-index: 2;
+    h1 {
+        margin-top: 20px;
     }
 
-    .photo {
-      width: 100%;
-      height: 230px;
-      background: url("foto.jpg") center / cover no-repeat;
-      border-radius: 15px;
-      margin-bottom: 15px;
-    }
-
-    h1 { font-size: 1.25em; }
-
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
+    img {
+        width: 250px;
+        margin: 20px 0;
     }
 
     button {
-      border: none;
-      padding: 12px 26px;
-      font-size: 1em;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+        padding: 15px 30px;
+        margin: 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #38bdf8;
+        color: #020617;
     }
 
-    #yes {
-      background: #ff4d6d;
-      color: white;
+    button:active {
+        transform: scale(0.95);
     }
-
-    #no {
-      background: #ddd;
-      color: #333;
-    }
-
-    /* Pantalla final */
-    .final {
-      position: fixed;
-      inset: 0;
-      background: #ff4d6d;
-      color: white;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-      z-index: 10;
-      flex-direction: column;
-    }
-
-    .final h2 { margin-bottom: 15px; }
-
-    .counter {
-      margin-top: 20px;
-      font-size: 0.9em;
-      opacity: 0.95;
-    }
-
-    .heart {
-      position: fixed;
-      pointer-events: none;
-      animation: float 3s linear forwards;
-    }
-
-    @keyframes float {
-      from { transform: translateY(0) scale(1); opacity: 1; }
-      to { transform: translateY(-250px) scale(1.6); opacity: 0; }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div class="card" id="card">
-    <div class="photo"></div>
-    <h1>
-      Hola mi amor 💖<br>
-      ¿Quieres ser el San Valentín de tu Cachorrito? 🐶
-    </h1>
+<h1>🎮 Mi Juego</h1>
 
-    <div class="buttons">
-      <button id="yes" type="button">Sí 💖</button>
-      <button id="no" type="button">No 💔</button>
-    </div>
-  </div>
+<img src="https://i.imgur.com/OVQ8Q8E.png" alt="Imagen del juego">
 
-  <div class="final" id="final">
-    <h2>💥 I + A 💥</h2>
-    <p>
-      Yo sabía que aceptarías ser mi San Valentín.<br><br>
-      Te amo demasiado y cuando estoy contigo me siento en casa.
-      Quiero compartir contigo esta fecha especial y guardarla como
-      uno de los muchos recuerdos hermosos que nos esperan en el futuro.
-      <br><br>
-      — Ian Uriel / Cachorrito 🐶❤️
-    </p>
+<br>
 
-    <div class="counter" id="counter"></div>
-  </div>
+<button id="btnPlay">▶ Iniciar Música</button>
+<button id="btnAction">🔥 Acción</button>
 
-  <!-- Audio -->
-  <audio id="music" src="sonido.mp3" preload="auto"></audio>
+<!-- AUDIO -->
+<audio id="music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
-  <script>
-    // 🔄 Siempre iniciar desde cero
-    localStorage.removeItem("accepted");
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-    const yesBtn = document.getElementById("yes");
-    const noBtn = document.getElementById("no");
-    const finalScreen = document.getElementById("final");
-    const card = document.getElementById("card");
     const music = document.getElementById("music");
+    const btnPlay = document.getElementById("btnPlay");
+    const btnAction = document.getElementById("btnAction");
 
-    let yesScale = 1;
-
-    noBtn.addEventListener("click", () => {
-      yesScale += 0.25;
-      yesBtn.style.transform = scale(${yesScale});
+    // BOTÓN PARA INICIAR MÚSICA (OBLIGATORIO EN CHROME)
+    btnPlay.addEventListener("click", () => {
+        music.volume = 0.5;
+        music.play()
+            .then(() => {
+                console.log("🎵 Música iniciada");
+            })
+            .catch(err => {
+                console.log("Error al reproducir música:", err);
+            });
     });
 
-    yesBtn.addEventListener("click", () => {
-      card.style.display = "none";
-      finalScreen.style.display = "flex";
-      explodeHearts();
-
-      // Audio seguro para PC y Android
-      music.currentTime = 0;
-      music.play().catch(e => console.log("Audio bloqueado:", e));
+    // BOTÓN DE ACCIÓN
+    btnAction.addEventListener("click", () => {
+        alert("🔥 El botón SÍ funciona");
+        console.log("Botón presionado");
     });
 
-    function explodeHearts() {
-      for (let i = 0; i < 90; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerText = "💖";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.top = "100vh";
-        heart.style.fontSize = Math.random() * 28 + 14 + "px";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
-      }
-    }
-
-    // ⏱️ Contador desde 15 Septiembre 2025
-    const startDate = new Date("2025-09-15T00:00:00");
-
-    function updateCounter() {
-      const now = new Date();
-      let diff = now - startDate;
-
-      const seconds = Math.floor(diff / 1000) % 60;
-      const minutes = Math.floor(diff / (1000 * 60)) % 60;
-      const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      document.getElementById("counter").innerHTML =
-        ⏱️ ${days} días, ${hours} horas, ${minutes} minutos y ${seconds} segundos juntos;
-    }
-
-    setInterval(updateCounter, 1000);
-    updateCounter();
-  </script>
+});
+</script>
 
 </body>
 </html>
