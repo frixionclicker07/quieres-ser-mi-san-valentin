@@ -93,17 +93,6 @@ button {
   z-index: 5;
 }
 
-.explode-heart {
-  position: absolute;
-  font-size: 20px;
-  animation: explode 1s ease-out forwards;
-}
-
-@keyframes explode {
-  from { transform: scale(0); opacity: 1; }
-  to { transform: scale(4); opacity: 0; }
-}
-
 .typewriter {
   border-right: 2px solid white;
   white-space: pre-line;
@@ -158,7 +147,6 @@ function createFloatingHeart() {
 setInterval(createFloatingHeart, 500);
 
 noBtn.addEventListener("click", () => {
-
   scale += 0.3;
   yesBtn.style.transform = "scale(" + scale + ")";
 
@@ -174,21 +162,9 @@ noBtn.addEventListener("click", () => {
 });
 
 yesBtn.addEventListener("click", () => {
-
   card.style.display = "none";
   finalScreen.style.display = "flex";
   music.play();
-
-  // Corazones explotando
-  for (let i = 0; i < 35; i++) {
-    let heart = document.createElement("div");
-    heart.classList.add("explode-heart");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.top = Math.random() * window.innerHeight + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
-  }
 
   const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
