@@ -42,8 +42,15 @@ button {
   cursor: pointer;
 }
 
-#yes { background: #ff4d6d; color: white; }
-#no { background: #ddd; }
+#yes {
+  background: #ff4d6d;
+  color: white;
+  transition: transform 0.3s;
+}
+
+#no {
+  background: #ddd;
+}
 
 .final {
   display: none;
@@ -51,6 +58,7 @@ button {
   inset: 0;
   background: #ff4d6d;
   color: white;
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -65,8 +73,8 @@ button {
   <div class="photo"></div>
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
-  <button onclick="sayYes()">Sí 💖</button>
-  <button onclick="sayNo()">No 💔</button>
+  <button id="yes">Sí 💖</button>
+  <button id="no">No 💔</button>
 </div>
 
 <div class="final" id="final">
@@ -83,25 +91,31 @@ button {
   </div>
 </div>
 
-<audio id="music" src="sonido.mp3"></audio>
+<audio id="music" src="sonido.mp3" preload="auto"></audio>
 
 <script>
 let scale = 1;
 
-function sayNo() {
-  alert("Intentaste decir que no 😏");
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const card = document.getElementById("card");
+const finalScreen = document.getElementById("final");
+const music = document.getElementById("music");
+
+noBtn.addEventListener("click", () => {
   scale += 0.3;
-  document.querySelector("#yes").style.transform = "scale(" + scale + ")";
-}
+  yesBtn.style.transform = scale(${scale});
+});
 
-function sayYes() {
-  alert("Dijiste que SÍ 💖");
-  document.getElementById("card").style.display = "none";
-  document.getElementById("final").style.display = "flex";
+yesBtn.addEventListener("click", () => {
+  card.style.display = "none";
+  finalScreen.style.display = "flex";
 
-  const music = document.getElementById("music");
-  music.play().catch(e => console.log(e));
-}
+  music.currentTime = 0;
+  music.play().catch(err => {
+    console.log("Audio bloqueado:", err);
+  });
+});
 </script>
 
 </body>
