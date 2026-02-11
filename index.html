@@ -17,6 +17,7 @@ body {
   overflow: hidden;
 }
 
+/* TARJETA */
 .card {
   background: white;
   padding: 20px;
@@ -36,10 +37,11 @@ body {
   margin-bottom: 15px;
 }
 
-.buttons {
+/* BOTONES */
+.button-container {
   position: relative;
   height: 120px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 button {
@@ -48,8 +50,8 @@ button {
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  transition: 0.3s ease;
   position: absolute;
+  transition: 0.3s ease;
 }
 
 #yes {
@@ -61,24 +63,59 @@ button {
 
 #no {
   background: #ddd;
-  left: 55%;
+  left: 60%;
   top: 40px;
 }
 
+/* PANTALLA FINAL */
 .final {
   display: none;
   position: fixed;
   inset: 0;
-  background: #ff4d6d;
   color: white;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 30px;
   flex-direction: column;
-  z-index: 5;
+  z-index: 10;
+  background: linear-gradient(-45deg, #ff4d6d, #ff758f, #ff99ac, #ff4d6d);
+  background-size: 400% 400%;
+  animation: fondoAnimado 6s ease infinite;
 }
 
+@keyframes fondoAnimado {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* TEXTO */
+#typedText {
+  max-width: 600px;
+  font-size: 18px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* CONFETTI */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  animation: fall linear forwards;
+  z-index: 20;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* CORAZONES */
 .heart {
   position: absolute;
   font-size: 20px;
@@ -98,39 +135,22 @@ button {
   <div class="photo"></div>
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
-  <div class="buttons">
+  <div class="button-container">
     <button id="yes">Sí 💖</button>
-    <button id="no">No 💔</button>
+    <button id="no">¿Segura? 😏</button>
   </div>
 </div>
 
 <div class="final" id="final">
   <h2>I + A 💘</h2>
-  <p>
-    Desde que llegaste a mi vida, todo tiene más color,
-    más risas y más sentido.<br><br>
-    No solo quiero que seas mi San Valentín este año,
-    quiero que lo seas en todos los que vienen,
-    en cada abrazo, en cada risa y en cada recuerdo
-    que construyamos juntos.<br><br>
-    Gracias por existir, por elegirme
-    y por hacerme tan feliz cada día.<br><br>
-    — Ian / Cachorrito 🐶❤️
-  </p>
+  <p id="typedText"></p>
 </div>
 
 <audio id="music" src="sonido.mp3"></audio>
 
 <script>
 let scale = 1;
-let noTexts = [
-  "¿Segura? 😳",
-  "¿Muy segura? 🥺",
-  "Piénsalo bien 😭",
-  "Última oportunidad 😢",
-  "No me hagas esto 💔"
-];
-
+let noTexts = ["¿Segura? 😏", "¿Muy segura? 🤨", "Piénsalo otra vez 😌", "No te creo 😅", "Última oportunidad 👀"];
 let textIndex = 0;
 
 const yesBtn = document.getElementById("yes");
@@ -138,36 +158,38 @@ const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
-const buttonsContainer = document.querySelector(".buttons");
+const typedText = document.getElementById("typedText");
 
+/* BOTÓN NO */
 noBtn.addEventListener("click", () => {
-
-  // Cambiar texto
-  if (textIndex < noTexts.length) {
-    noBtn.innerText = noTexts[textIndex];
-    textIndex++;
-  }
-
-  // Hacer crecer el botón Sí
-  scale += 0.25;
+  scale += 0.3;
   yesBtn.style.transform = "scale(" + scale + ")";
 
-  // Mover botón No dentro del contenedor sin encimarse
-  const containerWidth = buttonsContainer.clientWidth - noBtn.offsetWidth;
-  const containerHeight = buttonsContainer.clientHeight - noBtn.offsetHeight;
+  // Cambiar texto
+  textIndex = (textIndex + 1) % noTexts.length;
+  noBtn.textContent = noTexts[textIndex];
 
-  const randomX = Math.random() * containerWidth;
-  const randomY = Math.random() * containerHeight;
-
-  noBtn.style.left = randomX + "px";
-  noBtn.style.top = randomY + "px";
+  // Mover botón
+  let container = document.querySelector(".button-container");
+  let maxX = container.clientWidth - noBtn.offsetWidth;
+  let maxY = container.clientHeight - noBtn.offsetHeight;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
 });
 
+/* BOTÓN SÍ */
 yesBtn.addEventListener("click", () => {
   card.style.display = "none";
   finalScreen.style.display = "flex";
-  music.play();
 
+  music.play().catch(()=>{});
+
+  // Vibración (solo celular compatible)
+  if (navigator.vibrate) {
+    navigator.vibrate([200,100,200]);
+  }
+
+  // Corazones explosivos
   for (let i = 0; i < 30; i++) {
     let heart = document.createElement("div");
     heart.classList.add("heart");
@@ -175,9 +197,47 @@ yesBtn.addEventListener("click", () => {
     heart.style.left = Math.random() * window.innerWidth + "px";
     heart.style.top = Math.random() * window.innerHeight + "px";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 1000);
   }
+
+  // Confetti
+  for (let i = 0; i < 80; i++) {
+    let confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.background = hsl(${Math.random()*360}, 100%, 60%);
+    confetti.style.animationDuration = (Math.random()*3 + 2) + "s";
+    document.body.appendChild(confetti);
+    setTimeout(()=>confetti.remove(), 5000);
+  }
+
+  // Texto máquina de escribir
+  let message = `
+Yo sabía que aceptarías ser mi San Valentín 💖
+
+Desde que empezó lo nuestro el 15 de septiembre de 2025,
+mi vida se volvió mucho más bonita.
+
+Te amo de una forma que no se puede medir,
+y cuando estoy contigo siento paz, felicidad
+y una emoción que no cambio por nada.
+
+Quiero compartir esta fecha especial contigo,
+guardar este recuerdo en nuestro corazón,
+y repetirlo en todos nuestros futuros años juntos.
+
+— Ian / Cachorrito 🐶❤️
+`;
+
+  let i = 0;
+  function typeWriter() {
+    if (i < message.length) {
+      typedText.textContent += message.charAt(i);
+      i++;
+      setTimeout(typeWriter, 35);
+    }
+  }
+  typeWriter();
 });
 </script>
 
