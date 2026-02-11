@@ -24,7 +24,7 @@ body {
   inset: 0;
   background: black;
   opacity: 0;
-  pointer-events: none;
+  pointer-events: none; /* Muy importante */
   z-index: 0;
   transition: opacity 2s ease;
 }
@@ -66,7 +66,7 @@ body {
   max-width: 420px;
   text-align: center;
   position: relative;
-  z-index: 2;
+  z-index: 10; /* aseguramos que esté encima del fondo */
   transition: opacity 0.8s ease;
 }
 
@@ -118,7 +118,7 @@ button {
   text-align: center;
   padding: 30px;
   flex-direction: column;
-  z-index: 5;
+  z-index: 20; /* más alto que la card y estrellas */
   transition: opacity 1s ease;
 }
 
@@ -209,7 +209,7 @@ const music = document.getElementById("music");
 const loveText = document.getElementById("loveText");
 const starsContainer = document.getElementById("stars");
 
-/* Estrellas */
+/* Crear estrellas */
 for (let i = 0; i < 150; i++) {
   let star = document.createElement("div");
   star.classList.add("star");
@@ -258,7 +258,7 @@ yesBtn.addEventListener("click", () => {
   }, 800);
 });
 
-/* ✍️ Máquina de escribir */
+/* Máquina de escribir */
 function startTypeWriter() {
   const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
