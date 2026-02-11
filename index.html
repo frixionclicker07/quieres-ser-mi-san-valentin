@@ -17,7 +17,6 @@ body {
   overflow: hidden;
 }
 
-/* TARJETA */
 .card {
   background: white;
   padding: 20px;
@@ -37,11 +36,9 @@ body {
   margin-bottom: 15px;
 }
 
-/* BOTONES */
-.button-container {
+.buttons {
   position: relative;
   height: 120px;
-  margin-top: 20px;
 }
 
 button {
@@ -50,72 +47,37 @@ button {
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  position: absolute;
   transition: 0.3s ease;
+  position: absolute;
 }
 
 #yes {
   background: #ff4d6d;
   color: white;
-  left: 25%;
+  left: 20%;
   top: 40px;
 }
 
 #no {
   background: #ddd;
-  left: 60%;
+  left: 55%;
   top: 40px;
 }
 
-/* PANTALLA FINAL */
 .final {
   display: none;
   position: fixed;
   inset: 0;
+  background: #ff4d6d;
   color: white;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 30px;
   flex-direction: column;
-  z-index: 10;
-  background: linear-gradient(-45deg, #ff4d6d, #ff758f, #ff99ac, #ff4d6d);
-  background-size: 400% 400%;
-  animation: fondoAnimado 6s ease infinite;
+  z-index: 5;
 }
 
-@keyframes fondoAnimado {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* TEXTO */
-#typedText {
-  max-width: 600px;
-  font-size: 18px;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-
-/* CONFETTI */
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  top: -10px;
-  animation: fall linear forwards;
-  z-index: 20;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
-}
-
-/* CORAZONES */
 .heart {
   position: absolute;
   font-size: 20px;
@@ -126,6 +88,12 @@ button {
   from { transform: scale(0); opacity: 1; }
   to { transform: scale(4); opacity: 0; }
 }
+
+.typewriter {
+  border-right: 2px solid white;
+  white-space: pre-line;
+  overflow: hidden;
+}
 </style>
 </head>
 
@@ -135,61 +103,58 @@ button {
   <div class="photo"></div>
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
-  <div class="button-container">
+  <div class="buttons">
     <button id="yes">Sí 💖</button>
-    <button id="no">¿Segura? 😏</button>
+    <button id="no">No 💔</button>
   </div>
 </div>
 
 <div class="final" id="final">
   <h2>I + A 💘</h2>
-  <p id="typedText"></p>
+  <p id="loveText" class="typewriter"></p>
 </div>
 
 <audio id="music" src="sonido.mp3"></audio>
 
 <script>
 let scale = 1;
-let noTexts = ["¿Segura? 😏", "¿Muy segura? 🤨", "Piénsalo otra vez 😌", "No te creo 😅", "Última oportunidad 👀"];
-let textIndex = 0;
+let noTexts = ["¿Segura? 😳", "¿Muy segura? 😏", "Piénsalo bien 🥺", "Última oportunidad 😌"];
+let noIndex = 0;
 
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
-const typedText = document.getElementById("typedText");
+const loveText = document.getElementById("loveText");
 
-/* BOTÓN NO */
 noBtn.addEventListener("click", () => {
+
+  // Crece botón sí
   scale += 0.3;
   yesBtn.style.transform = "scale(" + scale + ")";
 
-  // Cambiar texto
-  textIndex = (textIndex + 1) % noTexts.length;
-  noBtn.textContent = noTexts[textIndex];
+  // Cambia texto del botón no
+  if (noIndex < noTexts.length) {
+    noBtn.innerText = noTexts[noIndex];
+    noIndex++;
+  }
 
-  // Mover botón
-  let container = document.querySelector(".button-container");
-  let maxX = container.clientWidth - noBtn.offsetWidth;
-  let maxY = container.clientHeight - noBtn.offsetHeight;
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
+  // Mueve botón no aleatoriamente
+  const maxX = 70;
+  const maxY = 60;
+  noBtn.style.left = Math.random() * maxX + "%";
+  noBtn.style.top = Math.random() * maxY + "%";
 });
 
-/* BOTÓN SÍ */
 yesBtn.addEventListener("click", () => {
+
   card.style.display = "none";
   finalScreen.style.display = "flex";
 
-  music.play().catch(()=>{});
+  music.play();
 
-  // Vibración (solo celular compatible)
-  if (navigator.vibrate) {
-    navigator.vibrate([200,100,200]);
-  }
-
-  // Corazones explosivos
+  // Corazones
   for (let i = 0; i < 30; i++) {
     let heart = document.createElement("div");
     heart.classList.add("heart");
@@ -200,43 +165,31 @@ yesBtn.addEventListener("click", () => {
     setTimeout(() => heart.remove(), 1000);
   }
 
-  // Confetti
-  for (let i = 0; i < 80; i++) {
-    let confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.background = hsl(${Math.random()*360}, 100%, 60%);
-    confetti.style.animationDuration = (Math.random()*3 + 2) + "s";
-    document.body.appendChild(confetti);
-    setTimeout(()=>confetti.remove(), 5000);
-  }
-
   // Texto máquina de escribir
-  let message = `
-Yo sabía que aceptarías ser mi San Valentín 💖
+  const message = 
+`Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
 
-Desde que empezó lo nuestro el 15 de septiembre de 2025,
-mi vida se volvió mucho más bonita.
+Desde que empezó lo nuestro, cada día contigo se ha vuelto más especial.
+Tu sonrisa, tu forma de mirarme, la manera en la que haces que todo tenga sentido…
 
-Te amo de una forma que no se puede medir,
-y cuando estoy contigo siento paz, felicidad
-y una emoción que no cambio por nada.
+Quiero pasar esta fecha contigo y todas las que vengan.
+Quiero seguir construyendo recuerdos, risas y momentos que algún día miremos atrás y digamos:
+“Qué bonito ha sido amarnos así.”
 
-Quiero compartir esta fecha especial contigo,
-guardar este recuerdo en nuestro corazón,
-y repetirlo en todos nuestros futuros años juntos.
+Gracias por hacerme tan feliz.
+Te amo más de lo que las palabras pueden explicar 💖
 
-— Ian / Cachorrito 🐶❤️
-`;
+— Ian / Cachorrito 🐶❤️`;
 
   let i = 0;
   function typeWriter() {
     if (i < message.length) {
-      typedText.textContent += message.charAt(i);
+      loveText.innerHTML += message.charAt(i);
       i++;
       setTimeout(typeWriter, 35);
     }
   }
+
   typeWriter();
 });
 </script>
