@@ -14,6 +14,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 .card {
@@ -23,6 +24,8 @@ body {
   width: 90%;
   max-width: 420px;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .photo {
@@ -40,12 +43,12 @@ button {
   border-radius: 30px;
   border: none;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 #yes {
   background: #ff4d6d;
   color: white;
-  transition: transform 0.3s;
 }
 
 #no {
@@ -58,11 +61,23 @@ button {
   inset: 0;
   background: #ff4d6d;
   color: white;
-  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 30px;
+  flex-direction: column;
+  z-index: 5;
+}
+
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+  from { transform: scale(0); opacity: 1; }
+  to { transform: scale(4); opacity: 0; }
 }
 </style>
 </head>
@@ -78,24 +93,22 @@ button {
 </div>
 
 <div class="final" id="final">
-  <div>
-    <h2>I + A 💘</h2>
-    <p>
-      Yo sabía que aceptarías ser mi San Valentín.<br><br>
-      Te amo demasiado y cuando estoy contigo soy muy feliz.
-      Quiero compartir contigo esta fecha especial y guardarla
-      como uno de nuestros recuerdos más bonitos.
-      <br><br>
-      — Ian Uriel / Cachorrito 🐶❤️
-    </p>
-  </div>
+  <h2>I + A 💘</h2>
+  <p>
+    Yo sabía que aceptarías ser mi San Valentín.<br><br>
+    Te amo demasiado, y cuando estoy contigo soy increíblemente feliz.
+    Quiero pasar esta fecha especial contigo y guardarla
+    como uno de nuestros recuerdos más bonitos,
+    para recordarlo en todos nuestros futuros años juntos.
+    <br><br>
+    — Ian Uriel / Cachorrito 🐶❤️
+  </p>
 </div>
 
-<audio id="music" src="sonido.mp3" preload="auto"></audio>
+<audio id="music" src="sonido.mp3"></audio>
 
 <script>
 let scale = 1;
-
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
@@ -103,18 +116,25 @@ const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
 
 noBtn.addEventListener("click", () => {
-  scale += 0.3;
-  yesBtn.style.transform = scale(${scale});
+  scale += 0.4;
+  yesBtn.style.transform = "scale(" + scale + ")";
 });
 
 yesBtn.addEventListener("click", () => {
   card.style.display = "none";
   finalScreen.style.display = "flex";
+  music.play();
 
-  music.currentTime = 0;
-  music.play().catch(err => {
-    console.log("Audio bloqueado:", err);
-  });
+  for (let i = 0; i < 25; i++) {
+    let heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.top = Math.random() * window.innerHeight + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1000);
+  }
 });
 </script>
 
