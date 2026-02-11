@@ -24,7 +24,7 @@ body {
   inset: 0;
   background: black;
   opacity: 0;
-  pointer-events: none; /* Muy importante */
+  pointer-events: none;
   z-index: 0;
   transition: opacity 2s ease;
 }
@@ -43,7 +43,7 @@ body {
   to { opacity: 1; }
 }
 
-/* 💗 Corazones flotantes */
+/* Corazones flotantes */
 .floating-heart {
   position: fixed;
   bottom: -20px;
@@ -66,7 +66,7 @@ body {
   max-width: 420px;
   text-align: center;
   position: relative;
-  z-index: 10; /* aseguramos que esté encima del fondo */
+  z-index: 2;
   transition: opacity 0.8s ease;
 }
 
@@ -118,50 +118,14 @@ button {
   text-align: center;
   padding: 30px;
   flex-direction: column;
-  z-index: 20; /* más alto que la card y estrellas */
+  z-index: 5;
   transition: opacity 1s ease;
-}
-
-/* 💘 Iniciales animadas */
-.initials {
-  margin-bottom: 20px;
-}
-
-.initials svg {
-  width: 220px;
-  height: 80px;
-}
-
-.path {
-  fill: none;
-  stroke: white;
-  stroke-width: 3;
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 2s ease forwards;
-}
-
-@keyframes draw {
-  to { stroke-dashoffset: 0; }
-}
-
-.initial-text {
-  font-size: 32px;
-  font-weight: bold;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 2s;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
 }
 
 .typewriter {
   border-right: 2px solid white;
   white-space: pre-line;
   overflow: hidden;
-  max-width: 500px;
 }
 </style>
 </head>
@@ -181,16 +145,7 @@ button {
 </div>
 
 <div class="final" id="final">
-
-  <!-- 💘 Iniciales -->
-  <div class="initials">
-    <svg viewBox="0 0 220 80">
-      <path class="path" d="M20 40 L100 40"></path>
-      <path class="path" d="M120 40 L200 40"></path>
-    </svg>
-    <div class="initial-text">I + A 💘</div>
-  </div>
-
+  <h2>I + A 💘</h2>
   <p id="loveText" class="typewriter"></p>
 </div>
 
@@ -220,23 +175,25 @@ for (let i = 0; i < 150; i++) {
 }
 
 /* Corazones flotantes */
-setInterval(() => {
+function createFloatingHeart() {
   const heart = document.createElement("div");
-  heart.className = "floating-heart";
+  heart.classList.add("floating-heart");
   heart.innerHTML = "💗";
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (15 + Math.random() * 25) + "px";
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 6000);
-}, 500);
+}
+setInterval(createFloatingHeart, 500);
 
 /* Botón NO */
 noBtn.addEventListener("click", () => {
   scale += 0.3;
-  yesBtn.style.transform = scale(${scale});
+  yesBtn.style.transform = "scale(" + scale + ")";
 
   if (noIndex < noTexts.length) {
-    noBtn.innerText = noTexts[noIndex++];
+    noBtn.innerText = noTexts[noIndex];
+    noIndex++;
   }
 
   noBtn.style.left = Math.random() * 70 + "%";
@@ -245,21 +202,29 @@ noBtn.addEventListener("click", () => {
 
 /* Botón SÍ */
 yesBtn.addEventListener("click", () => {
+
   music.play();
+
   card.style.opacity = "0";
 
   setTimeout(() => {
     card.style.display = "none";
+
+    // Activar cielo estrellado
     starsContainer.style.opacity = "1";
     document.body.style.background = "black";
+
     finalScreen.style.pointerEvents = "auto";
     finalScreen.style.opacity = "1";
+
     startTypeWriter();
+
   }, 800);
 });
 
 /* Máquina de escribir */
 function startTypeWriter() {
+
   const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
 
@@ -278,13 +243,15 @@ Te amo más de lo que las palabras pueden explicar 💖
   let i = 0;
   loveText.innerHTML = "";
 
-  function type() {
+  function typeWriter() {
     if (i < message.length) {
-      loveText.innerHTML += message.charAt(i++);
-      setTimeout(type, 35);
+      loveText.innerHTML += message.charAt(i);
+      i++;
+      setTimeout(typeWriter, 35);
     }
   }
-  type();
+
+  typeWriter();
 }
 </script>
 
