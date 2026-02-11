@@ -122,32 +122,46 @@ button {
   transition: opacity 1s ease;
 }
 
-/* 💞 Iniciales */
+/* 💘 Iniciales animadas */
 .initials {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  font-size: 60px;
-  font-weight: bold;
   margin-bottom: 20px;
-  position: relative;
 }
 
-.line {
-  width: 0;
-  height: 3px;
-  background: white;
-  transition: width 1.5s ease;
+.initials svg {
+  width: 220px;
+  height: 80px;
 }
 
-.initials.show .line {
-  width: 80px;
+.path {
+  fill: none;
+  stroke: white;
+  stroke-width: 3;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw 2s ease forwards;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.initial-text {
+  font-size: 32px;
+  font-weight: bold;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 .typewriter {
   border-right: 2px solid white;
   white-space: pre-line;
   overflow: hidden;
+  max-width: 500px;
 }
 </style>
 </head>
@@ -167,11 +181,16 @@ button {
 </div>
 
 <div class="final" id="final">
-  <div class="initials" id="initials">
-    <span>I</span>
-    <div class="line"></div>
-    <span>A</span>
+
+  <!-- 💘 Iniciales -->
+  <div class="initials">
+    <svg viewBox="0 0 220 80">
+      <path class="path" d="M20 40 L100 40"></path>
+      <path class="path" d="M120 40 L200 40"></path>
+    </svg>
+    <div class="initial-text">I + A 💘</div>
   </div>
+
   <p id="loveText" class="typewriter"></p>
 </div>
 
@@ -189,7 +208,6 @@ const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
 const loveText = document.getElementById("loveText");
 const starsContainer = document.getElementById("stars");
-const initials = document.getElementById("initials");
 
 /* Estrellas */
 for (let i = 0; i < 150; i++) {
@@ -204,7 +222,7 @@ for (let i = 0; i < 150; i++) {
 /* Corazones flotantes */
 setInterval(() => {
   const heart = document.createElement("div");
-  heart.classList.add("floating-heart");
+  heart.className = "floating-heart";
   heart.innerHTML = "💗";
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (15 + Math.random() * 25) + "px";
@@ -232,21 +250,17 @@ yesBtn.addEventListener("click", () => {
 
   setTimeout(() => {
     card.style.display = "none";
-    document.body.style.background = "black";
     starsContainer.style.opacity = "1";
-
+    document.body.style.background = "black";
     finalScreen.style.pointerEvents = "auto";
     finalScreen.style.opacity = "1";
-
-    initials.classList.add("show");
-
-    setTimeout(startTypeWriter, 1800);
+    startTypeWriter();
   }, 800);
 });
 
-/* Máquina de escribir */
+/* ✍️ Máquina de escribir */
 function startTypeWriter() {
-  const message =
+  const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
 
 Desde que empezó lo nuestro, cada día contigo se ha vuelto más especial.
@@ -264,13 +278,13 @@ Te amo más de lo que las palabras pueden explicar 💖
   let i = 0;
   loveText.innerHTML = "";
 
-  function typeWriter() {
+  function type() {
     if (i < message.length) {
       loveText.innerHTML += message.charAt(i++);
-      setTimeout(typeWriter, 35);
+      setTimeout(type, 35);
     }
   }
-  typeWriter();
+  type();
 }
 </script>
 
