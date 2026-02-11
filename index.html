@@ -41,6 +41,7 @@ body {
   text-align: center;
   position: relative;
   z-index: 2;
+  transition: opacity 0.8s ease;
 }
 
 .photo {
@@ -80,17 +81,20 @@ button {
 }
 
 .final {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
   position: fixed;
   inset: 0;
   background: #ff4d6d;
   color: white;
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 30px;
   flex-direction: column;
   z-index: 5;
+  transition: opacity 1s ease;
 }
 
 .typewriter {
@@ -140,12 +144,11 @@ function createFloatingHeart() {
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (15 + Math.random() * 25) + "px";
   document.body.appendChild(heart);
-
   setTimeout(() => heart.remove(), 6000);
 }
-
 setInterval(createFloatingHeart, 500);
 
+/* Botón NO */
 noBtn.addEventListener("click", () => {
   scale += 0.3;
   yesBtn.style.transform = "scale(" + scale + ")";
@@ -161,10 +164,28 @@ noBtn.addEventListener("click", () => {
   noBtn.style.top = Math.random() * maxY + "%";
 });
 
+/* Botón SÍ */
 yesBtn.addEventListener("click", () => {
-  card.style.display = "none";
-  finalScreen.style.display = "flex";
+
   music.play();
+
+  // Fade out tarjeta
+  card.style.opacity = "0";
+
+  setTimeout(() => {
+    card.style.display = "none";
+
+    // Fade in pantalla final
+    finalScreen.style.pointerEvents = "auto";
+    finalScreen.style.opacity = "1";
+
+    startTypeWriter();
+
+  }, 800);
+});
+
+/* Máquina de escribir */
+function startTypeWriter() {
 
   const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
@@ -182,6 +203,8 @@ Te amo más de lo que las palabras pueden explicar 💖
 — Ian / Cachorrito 🐶❤️`;
 
   let i = 0;
+  loveText.innerHTML = "";
+
   function typeWriter() {
     if (i < message.length) {
       loveText.innerHTML += message.charAt(i);
@@ -191,7 +214,7 @@ Te amo más de lo que las palabras pueden explicar 💖
   }
 
   typeWriter();
-});
+}
 </script>
 
 </body>
