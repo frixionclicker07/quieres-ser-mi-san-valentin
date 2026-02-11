@@ -17,6 +17,21 @@ body {
   overflow: hidden;
 }
 
+/* Corazones flotantes */
+.floating-heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 20px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 0.7; }
+  to { transform: translateY(-110vh); opacity: 0; }
+}
+
 .card {
   background: white;
   padding: 20px;
@@ -78,7 +93,7 @@ button {
   z-index: 5;
 }
 
-.heart {
+.explode-heart {
   position: absolute;
   font-size: 20px;
   animation: explode 1s ease-out forwards;
@@ -128,19 +143,30 @@ const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
 const loveText = document.getElementById("loveText");
 
+/* Corazones flotantes constantes */
+function createFloatingHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("floating-heart");
+  heart.innerHTML = "💗";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (15 + Math.random() * 25) + "px";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(createFloatingHeart, 500);
+
 noBtn.addEventListener("click", () => {
 
-  // Crece botón sí
   scale += 0.3;
   yesBtn.style.transform = "scale(" + scale + ")";
 
-  // Cambia texto del botón no
   if (noIndex < noTexts.length) {
     noBtn.innerText = noTexts[noIndex];
     noIndex++;
   }
 
-  // Mueve botón no aleatoriamente
   const maxX = 70;
   const maxY = 60;
   noBtn.style.left = Math.random() * maxX + "%";
@@ -151,13 +177,12 @@ yesBtn.addEventListener("click", () => {
 
   card.style.display = "none";
   finalScreen.style.display = "flex";
-
   music.play();
 
-  // Corazones
-  for (let i = 0; i < 30; i++) {
+  // Corazones explotando
+  for (let i = 0; i < 35; i++) {
     let heart = document.createElement("div");
-    heart.classList.add("heart");
+    heart.classList.add("explode-heart");
     heart.innerHTML = "💖";
     heart.style.left = Math.random() * window.innerWidth + "px";
     heart.style.top = Math.random() * window.innerHeight + "px";
@@ -165,7 +190,6 @@ yesBtn.addEventListener("click", () => {
     setTimeout(() => heart.remove(), 1000);
   }
 
-  // Texto máquina de escribir
   const message = 
 `Sabía que dirías que sí… porque lo nuestro es de esas cosas bonitas que simplemente se sienten correctas desde el corazón 💕
 
