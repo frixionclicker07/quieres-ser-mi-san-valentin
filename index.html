@@ -27,8 +27,10 @@ body {
   text-align: center;
   position: relative;
   z-index: 3;
+  height: 480px;
 }
 
+/* FOTO */
 .photo {
   width: 100%;
   height: 220px;
@@ -37,24 +39,29 @@ body {
   margin-bottom: 15px;
 }
 
+/* BOTONES */
 button {
   padding: 14px 28px;
-  margin: 10px;
   font-size: 18px;
   border-radius: 30px;
   border: none;
   cursor: pointer;
   transition: 0.3s ease;
+  position: absolute;
 }
 
 #yes {
   background: #ff4d6d;
   color: white;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #no {
   background: #ddd;
-  position: absolute;
+  bottom: 30px;
+  left: 20%;
 }
 
 /* PANTALLA FINAL */
@@ -116,9 +123,7 @@ button {
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
   <button id="yes">Sí 💖</button>
-  <button id="no" style="left: 50%; top: 75%; transform: translate(-50%, -50%);">
-    No 💔
-  </button>
+  <button id="no">No 💔</button>
 </div>
 
 <div class="final" id="final">
@@ -171,9 +176,10 @@ const noTexts = [
 
 /* BOTÓN NO */
 noBtn.addEventListener("click", () => {
-  // Crece el botón Sí
+
+  // Crece botón Sí
   scale += 0.4;
-  yesBtn.style.transform = "scale(" + scale + ")";
+  yesBtn.style.transform = "translateX(-50%) scale(" + scale + ")";
 
   // Cambia texto
   if (noClickCount < noTexts.length) {
@@ -181,7 +187,7 @@ noBtn.addEventListener("click", () => {
   }
   noClickCount++;
 
-  // Mover botón No aleatoriamente
+  // Movimiento aleatorio dentro de la tarjeta
   const cardRect = card.getBoundingClientRect();
   const btnWidth = noBtn.offsetWidth;
   const btnHeight = noBtn.offsetHeight;
