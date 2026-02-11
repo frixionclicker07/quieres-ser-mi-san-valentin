@@ -54,6 +54,7 @@ button {
 
 #no {
   background: #ddd;
+  position: absolute;
 }
 
 /* PANTALLA FINAL */
@@ -72,7 +73,7 @@ button {
   overflow-y: auto;
 }
 
-/* CORAZONES EXPLOSIÓN */
+/* EXPLOSIÓN */
 .heart {
   position: absolute;
   font-size: 20px;
@@ -115,7 +116,9 @@ button {
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
   <button id="yes">Sí 💖</button>
-  <button id="no">No 💔</button>
+  <button id="no" style="left: 50%; top: 75%; transform: translate(-50%, -50%);">
+    No 💔
+  </button>
 </div>
 
 <div class="final" id="final">
@@ -150,16 +153,47 @@ button {
 
 <script>
 let scale = 1;
+let noClickCount = 0;
+
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
 
+const noTexts = [
+  "¿Segura? 😏",
+  "¿Muy segura? 🤨",
+  "Piénsalo otra vez... 💭",
+  "No creo que quieras eso 👀",
+  "El botón Sí se ve mejor 💖"
+];
+
 /* BOTÓN NO */
 noBtn.addEventListener("click", () => {
+  // Crece el botón Sí
   scale += 0.4;
   yesBtn.style.transform = "scale(" + scale + ")";
+
+  // Cambia texto
+  if (noClickCount < noTexts.length) {
+    noBtn.innerHTML = noTexts[noClickCount];
+  }
+  noClickCount++;
+
+  // Mover botón No aleatoriamente
+  const cardRect = card.getBoundingClientRect();
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+
+  const maxX = cardRect.width - btnWidth - 10;
+  const maxY = cardRect.height - btnHeight - 10;
+
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
 });
 
 /* BOTÓN SÍ */
@@ -168,7 +202,6 @@ yesBtn.addEventListener("click", () => {
   finalScreen.style.display = "flex";
   music.play();
 
-  /* EXPLOSIÓN */
   for (let i = 0; i < 30; i++) {
     let heart = document.createElement("div");
     heart.classList.add("heart");
@@ -180,7 +213,7 @@ yesBtn.addEventListener("click", () => {
   }
 });
 
-/* CORAZONES FLOTANDO CONSTANTES */
+/* CORAZONES FLOTANDO */
 function createFloatingHeart() {
   const heart = document.createElement("div");
   heart.classList.add("floating-heart");
