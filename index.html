@@ -17,7 +17,6 @@ body {
   overflow: hidden;
 }
 
-/* TARJETA */
 .card {
   background: white;
   padding: 20px;
@@ -26,11 +25,9 @@ body {
   max-width: 420px;
   text-align: center;
   position: relative;
-  z-index: 3;
-  height: 480px;
+  z-index: 2;
 }
 
-/* FOTO */
 .photo {
   width: 100%;
   height: 220px;
@@ -39,7 +36,12 @@ body {
   margin-bottom: 15px;
 }
 
-/* BOTONES */
+.buttons {
+  position: relative;
+  height: 120px;
+  margin-top: 10px;
+}
+
 button {
   padding: 14px 28px;
   font-size: 18px;
@@ -53,18 +55,16 @@ button {
 #yes {
   background: #ff4d6d;
   color: white;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 25%;
+  top: 40px;
 }
 
 #no {
   background: #ddd;
-  bottom: 30px;
-  left: 20%;
+  left: 55%;
+  top: 40px;
 }
 
-/* PANTALLA FINAL */
 .final {
   display: none;
   position: fixed;
@@ -77,10 +77,8 @@ button {
   padding: 30px;
   flex-direction: column;
   z-index: 5;
-  overflow-y: auto;
 }
 
-/* EXPLOSIÓN */
 .heart {
   position: absolute;
   font-size: 20px;
@@ -91,28 +89,6 @@ button {
   from { transform: scale(0); opacity: 1; }
   to { transform: scale(4); opacity: 0; }
 }
-
-/* CORAZONES FLOTANDO */
-.floating-heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
-  animation: floatUp linear forwards;
-  opacity: 0.8;
-  pointer-events: none;
-  z-index: 1;
-}
-
-@keyframes floatUp {
-  from {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  to {
-    transform: translateY(-110vh) scale(1.5);
-    opacity: 0;
-  }
-}
 </style>
 </head>
 
@@ -122,35 +98,24 @@ button {
   <div class="photo"></div>
   <h2>Hola mi amor 💖<br>¿Quieres ser mi San Valentín?</h2>
 
-  <button id="yes">Sí 💖</button>
-  <button id="no">No 💔</button>
+  <div class="buttons">
+    <button id="yes">Sí 💖</button>
+    <button id="no">No 💔</button>
+  </div>
 </div>
 
 <div class="final" id="final">
   <h2>I + A 💘</h2>
   <p>
-    Yo sabía que dirías que sí… porque lo nuestro no es coincidencia 💖<br><br>
-
-    Desde el 15 de septiembre de 2025 mi vida cambió,
-    y desde entonces cada día contigo se siente como un regalo.
-    Contigo entendí que el amor no es solo una palabra,
-    es sentir que alguien se vuelve tu hogar incluso cuando no estás en casa.<br><br>
-
-    Cuando estoy contigo el mundo se vuelve más ligero,
-    sonrío más, pienso más bonito y siento más fuerte.
-    Los días simples se vuelven inolvidables,
-    y el futuro deja de dar miedo cuando lo imagino a tu lado.<br><br>
-
-    No quiero solo este San Valentín…
-    quiero cada aniversario, cada septiembre,
-    cada meta cumplida, cada recuerdo que aún no vivimos.
-    Quiero seguir construyendo nuestra historia,
-    hoy, mañana y en todos nuestros futuros años.<br><br>
-
-    I + A 💘<br>
-    Para siempre empezando ahora.<br><br>
-
-    — Ian / Tu Cachorrito 🐶❤️
+    Desde que llegaste a mi vida, todo tiene más color,
+    más risas y más sentido.<br><br>
+    No solo quiero que seas mi San Valentín este año,
+    quiero que lo seas en todos los que vienen,
+    en cada abrazo, en cada risa y en cada recuerdo
+    que construyamos juntos.<br><br>
+    Gracias por existir, por elegirme
+    y por hacerme tan feliz cada día.<br><br>
+    — Ian / Cachorrito 🐶❤️
   </p>
 </div>
 
@@ -158,51 +123,46 @@ button {
 
 <script>
 let scale = 1;
-let noClickCount = 0;
+let noTexts = [
+  "¿Segura? 😳",
+  "¿Muy segura? 🥺",
+  "Piénsalo bien 😭",
+  "Última oportunidad 😢",
+  "No me hagas esto 💔"
+];
+
+let textIndex = 0;
 
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
+const buttonsContainer = document.querySelector(".buttons");
 
-const noTexts = [
-  "¿Segura? 😏",
-  "¿Muy segura? 🤨",
-  "Piénsalo otra vez... 💭",
-  "No creo que quieras eso 👀",
-  "El botón Sí se ve mejor 💖"
-];
-
-/* BOTÓN NO */
 noBtn.addEventListener("click", () => {
 
-  // Crece botón Sí
-  scale += 0.4;
-  yesBtn.style.transform = "translateX(-50%) scale(" + scale + ")";
-
-  // Cambia texto
-  if (noClickCount < noTexts.length) {
-    noBtn.innerHTML = noTexts[noClickCount];
+  // Cambiar texto
+  if (textIndex < noTexts.length) {
+    noBtn.innerText = noTexts[textIndex];
+    textIndex++;
   }
-  noClickCount++;
 
-  // Movimiento aleatorio dentro de la tarjeta
-  const cardRect = card.getBoundingClientRect();
-  const btnWidth = noBtn.offsetWidth;
-  const btnHeight = noBtn.offsetHeight;
+  // Hacer crecer el botón Sí
+  scale += 0.25;
+  yesBtn.style.transform = "scale(" + scale + ")";
 
-  const maxX = cardRect.width - btnWidth - 10;
-  const maxY = cardRect.height - btnHeight - 10;
+  // Mover botón No dentro del contenedor sin encimarse
+  const containerWidth = buttonsContainer.clientWidth - noBtn.offsetWidth;
+  const containerHeight = buttonsContainer.clientHeight - noBtn.offsetHeight;
 
-  const randomX = Math.random() * maxX;
-  const randomY = Math.random() * maxY;
+  const randomX = Math.random() * containerWidth;
+  const randomY = Math.random() * containerHeight;
 
   noBtn.style.left = randomX + "px";
   noBtn.style.top = randomY + "px";
 });
 
-/* BOTÓN SÍ */
 yesBtn.addEventListener("click", () => {
   card.style.display = "none";
   finalScreen.style.display = "flex";
@@ -215,25 +175,10 @@ yesBtn.addEventListener("click", () => {
     heart.style.left = Math.random() * window.innerWidth + "px";
     heart.style.top = Math.random() * window.innerHeight + "px";
     document.body.appendChild(heart);
+
     setTimeout(() => heart.remove(), 1000);
   }
 });
-
-/* CORAZONES FLOTANDO */
-function createFloatingHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("floating-heart");
-  heart.innerHTML = "💗";
-
-  heart.style.left = Math.random() * window.innerWidth + "px";
-  heart.style.fontSize = (15 + Math.random() * 25) + "px";
-  heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 8000);
-}
-
-setInterval(createFloatingHeart, 500);
 </script>
 
 </body>
