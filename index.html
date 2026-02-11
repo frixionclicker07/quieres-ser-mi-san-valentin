@@ -15,6 +15,32 @@ body {
   align-items: center;
   min-height: 100vh;
   overflow: hidden;
+  transition: background 2s ease;
+}
+
+/* 🌌 Cielo estrellado */
+.stars {
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 2s ease;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
 }
 
 /* Corazones flotantes */
@@ -85,7 +111,6 @@ button {
   pointer-events: none;
   position: fixed;
   inset: 0;
-  background: #ff4d6d;
   color: white;
   display: flex;
   justify-content: center;
@@ -106,6 +131,8 @@ button {
 </head>
 
 <body>
+
+<div class="stars" id="stars"></div>
 
 <div class="card" id="card">
   <div class="photo"></div>
@@ -135,8 +162,19 @@ const card = document.getElementById("card");
 const finalScreen = document.getElementById("final");
 const music = document.getElementById("music");
 const loveText = document.getElementById("loveText");
+const starsContainer = document.getElementById("stars");
 
-/* Corazones flotantes constantes */
+/* Crear estrellas */
+for (let i = 0; i < 150; i++) {
+  let star = document.createElement("div");
+  star.classList.add("star");
+  star.style.top = Math.random() * 100 + "vh";
+  star.style.left = Math.random() * 100 + "vw";
+  star.style.animationDuration = (1 + Math.random() * 3) + "s";
+  starsContainer.appendChild(star);
+}
+
+/* Corazones flotantes */
 function createFloatingHeart() {
   const heart = document.createElement("div");
   heart.classList.add("floating-heart");
@@ -158,10 +196,8 @@ noBtn.addEventListener("click", () => {
     noIndex++;
   }
 
-  const maxX = 70;
-  const maxY = 60;
-  noBtn.style.left = Math.random() * maxX + "%";
-  noBtn.style.top = Math.random() * maxY + "%";
+  noBtn.style.left = Math.random() * 70 + "%";
+  noBtn.style.top = Math.random() * 60 + "%";
 });
 
 /* Botón SÍ */
@@ -169,13 +205,15 @@ yesBtn.addEventListener("click", () => {
 
   music.play();
 
-  // Fade out tarjeta
   card.style.opacity = "0";
 
   setTimeout(() => {
     card.style.display = "none";
 
-    // Fade in pantalla final
+    // Activar cielo estrellado
+    starsContainer.style.opacity = "1";
+    document.body.style.background = "black";
+
     finalScreen.style.pointerEvents = "auto";
     finalScreen.style.opacity = "1";
 
